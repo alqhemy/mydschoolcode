@@ -6,7 +6,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Authorized extends REST_Controller
 {
     protected $user;
-    
     protected $auth;
     function __construct()
     {
