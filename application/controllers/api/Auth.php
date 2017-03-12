@@ -17,8 +17,8 @@ class Auth extends Authorized
 	public function login_post()
 	{
 		
-		$req = json_decode($this->security->xss_clean($this->input->raw_input_stream),true);		
-		$login = $this->user_m->login( $req["user"],$req["password"]) ;
+		$req = json_decode($this->security->xss_clean($this->input->raw_input_stream));		
+		$login = $this->user_m->login($req) ;
 		
 		if($login == FALSE){
 			$error = '{"status":"failed","error":"User & Password Not match"}';
@@ -26,8 +26,8 @@ class Auth extends Authorized
 			return;
 			
 		}
-		$data["status"] = "ok";
-		$data["data"] = $login;
+		$data = array('status' => 'ok','data' =>$login );
+		
 		$this->set_response($data, REST_Controller::HTTP_OK);
 		
 		
@@ -35,17 +35,19 @@ class Auth extends Authorized
 	
 	public function register_post()
 	{
-		$req = json_decode($this->security->xss_clean($this->input->raw_input_stream),true);	
-		$data= array('token' => $req["uid"],'user'=>$req["user"]);
+		$req = json_decode($this->security->xss_clean($this->input->raw_input_stream));	
+		$dat["user"] = $req->user;
+		$dat["password"] =  md5($req->password);
+		$dat["name"] =  $req->name;
+		$ok = $this->user_m->register($dat);
 
-		$ok = $this->user_m->register($data);
 		if($ok){
-			$status = array('status' => 'ok','data'=>$data );
+			$status = array('status' =>"oke" ,'data'=>$dat );
 		}else{
-			$status = array("status" => "failed" , "error"=>"User already exist" );
+			$status = array('status' => 'failed','data' =>'User already exist' );
 		}
 		
-		$this->set_response(json_encode($status),REST_Controller::HTTP_OK);
+		$this->set_response($status,REST_Controller::HTTP_OK);
 
 	}
 	
