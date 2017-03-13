@@ -7,7 +7,7 @@ class User_m extends MY_Model
 	function __construct ()
 		{
 		parent::__construct();
-		$this->dbase = $this->load->database("default",true);
+		// $this->dbase = $this->load->database("default",true);
 	}
 	
 	public function login ($result)
